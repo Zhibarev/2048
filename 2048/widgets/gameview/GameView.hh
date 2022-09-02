@@ -38,10 +38,6 @@ private:
     unsigned goal = 0;
 
 
-    unsigned calculateScore();
-
-    void setScore(unsigned newScore);
-
     void blockTile(Coords coords);
 
 private slots:
