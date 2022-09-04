@@ -2,8 +2,6 @@
 #define GAMEEVENTS_H
 
 #include <QObject>
-#include <memory>
-#include "widgets/settings/Settings.hh"
 
 class Model;
 

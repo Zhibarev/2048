@@ -3,7 +3,6 @@
 #include "provider/graphicaltileprovider/NumberTileProvider.hh"
 #include "model/Model.hh"
 #include <QGraphicsRectItem>
-#include <algorithm>
 
 FieldRenderer::FieldRenderer(QGraphicsScene *scene) : scene(scene)
 {

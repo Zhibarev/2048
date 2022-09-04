@@ -1,6 +1,5 @@
 #include "MainWindow.hh"
 #include "ui_Mainwindow.h"
-
 #include "widgets/settings/Settings.hh"
 #include "widgets/settings/IncorrectSettingsException.hh"
 #include "widgets/InstructionBox.hh"

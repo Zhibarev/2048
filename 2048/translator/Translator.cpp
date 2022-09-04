@@ -1,6 +1,5 @@
 #include "Translator.hh"
 #include <QApplication>
-#include <stdexcept>
 
 Translator::Translator()
 {

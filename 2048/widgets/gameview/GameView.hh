@@ -2,15 +2,10 @@
 #define GAMEVIEW_H
 
 #include <QGraphicsView>
-#include <QGraphicsRectItem>
-#include <QLabel>
-#include <QGraphicsView>
 #include <QTimer>
-#include <QObject>
 #include <memory>
 #include <vector>
 #include "FieldRenderer.hh"
-#include "widgets/settings/Settings.hh"
 
 
 class GameView : public QGraphicsView

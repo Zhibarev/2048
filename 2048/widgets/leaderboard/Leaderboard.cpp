@@ -3,8 +3,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QString>
-#include <algorithm>
-#include <iterator>
 
 Leaderboard::Leaderboard(size_t maxRecords)
     : maxRecords(maxRecords)

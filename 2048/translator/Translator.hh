@@ -3,7 +3,6 @@
 
 #include <QTranslator>
 #include <QString>
-#include <unordered_map>
 #include "Language.hh"
 
 

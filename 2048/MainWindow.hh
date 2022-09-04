@@ -3,8 +3,6 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
-#include <QString>
-#include <memory>
 #include "translator/Translator.hh"
 #include "Controller.hh"
 

@@ -1,5 +1,4 @@
 #include "InstructionBox.hh"
-
 #include <QEvent>
 
 InstructionBox::InstructionBox(QWidget *parent)

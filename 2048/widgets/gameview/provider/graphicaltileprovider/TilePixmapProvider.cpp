@@ -1,5 +1,4 @@
 #include "TilePixmapProvider.hh"
-
 #include <QString>
 
 TilePixmapProvider::TilePixmapProvider()
