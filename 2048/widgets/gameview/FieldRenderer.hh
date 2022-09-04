@@ -1,12 +1,14 @@
 #ifndef FIELDRENDERER_H
 #define FIELDRENDERER_H
 
-#include "model/GameBoard.hh"
-#include "provider/TileColorProvider.hh"
-#include "provider/graphicaltileprovider/GraphicalTileProvider.hh"
-
 #include <QGraphicsScene>
 #include <memory>
+#include "provider/TileColorProvider.hh"
+#include "provider/graphicaltileprovider/GraphicalTileProvider.hh"
+#include <vector>
+#include <functional>
+
+class Model;
 
 
 class FieldRenderer
@@ -15,17 +17,16 @@ public:
 
     explicit FieldRenderer(QGraphicsScene *scene);
 
-    void createField(const std::shared_ptr<GameBoard> &gameBoard, bool isGraphicsModeActive);
+    void createField(const Model &model, bool isGraphicsModeActive);
 
-    void update();
+    void updateField(const Model &model);
+    void updateField(const std::vector<std::vector<unsigned>> &gameBoard);
 
 private:
     const double TILE_MARGIN = 6;
     const QColor BACKGROUND_COLOR{187, 173, 160};
 
     QGraphicsScene *scene = nullptr;
-
-    std::shared_ptr<GameBoard> gameBoard;
 
     std::vector<std::vector<QGraphicsRectItem *>> tileBackgroundRects;
     std::vector<QGraphicsItem *> tiles;
@@ -38,7 +39,9 @@ private:
 
     void updateTile(size_t i, size_t j, unsigned value);
 
-    void drawGrid();
+    void drawGrid(size_t size);
+
+    void updateField(const std::function<unsigned(size_t, size_t)> &getTileNumber);
 };
 
 #endif // FIELDRENDERER_H

@@ -2,7 +2,8 @@
 #define INCORRECTSETTINGSEXCEPTION_H
 
 #include <stdexcept>
-#include <QString>
+
+class QString;
 
 
 class IncorrectSettingsException : std::runtime_error

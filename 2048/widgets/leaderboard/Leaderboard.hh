@@ -4,15 +4,16 @@
 #include <QString>
 #include <QFile>
 #include <set>
-
 #include "ScoreInfo.hh"
-
 
 class Leaderboard
 {
 public:
     Leaderboard(size_t maxRecords = 10);
+
     ~Leaderboard();
+    Leaderboard(const Leaderboard&) = delete;
+    Leaderboard& operator=(const Leaderboard&) = delete;
 
     void addScore(const ScoreInfo &scoreInfo);
 

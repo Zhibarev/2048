@@ -1,8 +1,10 @@
 #include "GameView.hh"
-
 #include "GameEventsEmitter.hh"
+#include "model/Model.hh"
+#include "widgets/settings/Settings.hh"
+#include "FieldRenderer.hh"
 #include <QGraphicsScene>
-#include <stdexcept>
+
 
 GameView::GameView(QWidget *parent)
     : QGraphicsView(parent)
@@ -14,69 +16,47 @@ GameView::GameView(QWidget *parent)
 
     fieldRenderer = std::make_unique<FieldRenderer>(scene);
 
-    QObject::connect(&appearanceDelayTimer, SIGNAL(timeout()), this, SLOT(createNewTwo()));
+    connect(&appearanceDelayTimer, SIGNAL(timeout()),
+            this, SLOT(createNewValue()));
+
+    connect(&GameEventsEmitter::instance(), SIGNAL(gameStarted(Model)),
+            this, SLOT(onGameStarted(Model)));
+    connect(&GameEventsEmitter::instance(), SIGNAL(modelMoved(Model)),
+            this, SLOT(onModelMoved(Model)));
+    connect(&GameEventsEmitter::instance(), SIGNAL(modelCreatedNewValue(Model)),
+            this, SLOT(onModelCreatedNewValue(Model)));
 }
 
-void GameView::startGame(const std::unique_ptr<Settings> &settings)
+void GameView::createNewValue()
 {
-    goal = settings->getGoal();
-    isStarted = true;
+    fieldRenderer->updateField(gameBoard);
+    appearanceDelayTimer.stop();
+    emit GameEventsEmitter::instance().viewAnimationEnded();
+}
 
-    gameBoard = std::make_shared<GameBoard>(settings->getSize());
-    gameBoard->init_empty();
-    gameBoard->fill(settings->getSeed());
-    if (settings->isRemovalModeActive())
-        gameBoard->activate_removal_mode(settings->getStepsToRemove());
-    if (settings->isBlockModeActive())
-        blockTile({ settings->getBlockedY(), settings->getBlockedX() });
+void GameView::onGameStarted(const Model &model)
+{
+    gameBoard.resize(model.getSize());
+    for (auto &row: gameBoard)
+        row.resize(model.getSize());
 
     scene()->setSceneRect(rect());
-    fieldRenderer->createField(gameBoard, settings->isGraphicsModeActive());
-
-    emit GameEventsEmitter::instance().scoreChanged(gameBoard->get_score());
+    fieldRenderer->createField(model, model.isGraphicsModeActive());
 }
 
-void GameView::move(Coords direction)
+void GameView::onModelMoved(const Model &model)
 {
-    if (!isStarted) {
-        qWarning("You cannot make a move until the game has started.");
-        return;
-    }
-
-    if (appearanceDelayTimer.isActive())
-        return;
-
-    bool isWin = gameBoard->move(direction, goal);
-
-    fieldRenderer->update();
-
-    if (isWin || gameBoard->is_full()) {
-        isStarted = false;
-        emit GameEventsEmitter::instance().gameEnded(isWin);
-        emit GameEventsEmitter::instance().playerWon(gameBoard->get_score());
-    }
-    else {
-        appearanceDelayTimer.start(APPEARANCE_DELAY);
-    }
+    fieldRenderer->updateField(model);
 }
 
-void GameView::blockTile(Coords coords)
+void GameView::onModelCreatedNewValue(const Model &model)
 {
-    NumberTile *tile = gameBoard->get_item(coords);
-    if (!tile->is_empty()) {
-        gameBoard->set_tile_block(coords, true);
-        gameBoard->new_value();
-        fieldRenderer->update();
+    for (size_t i = 0; i < gameBoard.size(); i++) {
+        for (size_t j = 0; j < gameBoard.size(); j++) {
+            gameBoard[i][j] = model.getTileNumber(i, j);
+        }
     }
-    else {
-        gameBoard->set_tile_block(coords, true);
-    }
-}
 
-void GameView::createNewTwo()
-{
-    gameBoard->new_value();
-    fieldRenderer->update();
-    appearanceDelayTimer.stop();
-    emit GameEventsEmitter::instance().scoreChanged(gameBoard->get_score());
+    appearanceDelayTimer.start(APPEARANCE_DELAY);
+    emit GameEventsEmitter::instance().viewAnimationStarted();
 }

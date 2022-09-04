@@ -2,19 +2,25 @@
 #define GAMEEVENTS_H
 
 #include <QObject>
+#include <memory>
+#include "widgets/settings/Settings.hh"
+
+class Model;
 
 class GameEventsEmitter : public QObject
 {
     Q_OBJECT
 
 signals:
-    void gameStarted();
+    void gameStarted(const Model &model);
     void gamePaused();
     void gameUnpaused();
     void gameReseted();
-    void gameEnded(bool isWin);
-    void playerWon(unsigned finalScore);
-    void scoreChanged(unsigned newScore);
+    void gameEnded(const Model &model);
+    void modelCreatedNewValue(const Model &model);
+    void modelMoved(const Model &model);
+    void viewAnimationStarted();
+    void viewAnimationEnded();
 
 public:
     static GameEventsEmitter &instance();

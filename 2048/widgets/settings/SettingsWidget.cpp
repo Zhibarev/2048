@@ -1,6 +1,7 @@
 #include "SettingsWidget.hh"
 #include "ui_SettingsWidget.h"
 #include "GameEventsEmitter.hh"
+#include "Settings.hh"
 
 SettingsWidget::SettingsWidget(QWidget *parent) :
     QWidget(parent),

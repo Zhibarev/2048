@@ -1,9 +1,11 @@
 #ifndef LEADERBOARDWIDGET_H
 #define LEADERBOARDWIDGET_H
 
-#include "ScoreInfo.hh"
 #include "Leaderboard.hh"
 #include <QWidget>
+
+class ScoreInfo;
+class Model;
 
 namespace Ui {
 class LeaderboardWidget;
@@ -28,6 +30,9 @@ private:
 
 
     void updateWidget();
+
+private slots:
+    void onGameEnded(const Model &model);
 };
 
 #endif // LEADERBOARDWIDGET_H

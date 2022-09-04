@@ -2,8 +2,9 @@
 #define GAMEINFOWIDGET_H
 
 #include <QWidget>
-#include <QTimer>
 #include <QString>
+
+class Model;
 
 namespace Ui {
 class GameInfoWidget;
@@ -34,7 +35,7 @@ private:
 
 private slots:
     void onGamePaused();
-    void onGameEnded(bool isWin);
+    void onGameEnded(const Model &model);
 };
 
 #endif // GAMEINFOWIDGET_H

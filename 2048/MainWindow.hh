@@ -29,18 +29,14 @@ protected:
 private:
     Ui::MainWindow *ui;
 
-    std::unique_ptr<Controller> controller;
+    Controller controller;
 
     Translator translator;
-
-    QString playerName;
 
 
     void connectSignalsAndSlots();
 
 private slots:
-    void onPlayerWon(unsigned finalScore);
-
     void OnUserTriedToStart();
 
     void showInstruction();

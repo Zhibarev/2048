@@ -1,7 +1,7 @@
 #include "FieldRenderer.hh"
-
 #include "provider/graphicaltileprovider/FigureTileProvider.hh"
 #include "provider/graphicaltileprovider/NumberTileProvider.hh"
+#include "model/Model.hh"
 #include <QGraphicsRectItem>
 #include <algorithm>
 
@@ -10,34 +10,29 @@ FieldRenderer::FieldRenderer(QGraphicsScene *scene) : scene(scene)
     scene->setBackgroundBrush(BACKGROUND_COLOR);
 }
 
-void FieldRenderer::createField(const std::shared_ptr<GameBoard> &gameBoard, bool isGraphicsModeActive)
+void FieldRenderer::createField(const Model &model, bool isGraphicsModeActive)
 {
-    if (gameBoard == nullptr)
-        qFatal("Unable to draw field with nullptr gameboard");
-    this->gameBoard = gameBoard;
-
-    if (!isGraphicsModeActive)
-        graphicalTileProvider = std::make_unique<NumberTileProvider>();
-    else
+    if (isGraphicsModeActive)
         graphicalTileProvider = std::make_unique<FigureTileProvider>();
+    else
+        graphicalTileProvider = std::make_unique<NumberTileProvider>();
 
-    drawGrid();
-    update();
+    drawGrid(model.getSize());
+    updateField(model);
 }
 
-void FieldRenderer::update()
+void FieldRenderer::updateField(const Model &model)
 {
-    clearTiles();
+    std::function<unsigned (size_t, size_t)> getTileNumber =
+            [&model](size_t i, size_t j) { return model.getTileNumber(i, j); };
+    updateField(getTileNumber);
+}
 
-    size_t size = gameBoard->get_size();
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = 0; j < size; j++) {
-            unsigned value = gameBoard->get_item({j, i})->get_value();
-            updateTile(i, j, value);
-        }
-    }
-
-    scene->update();
+void FieldRenderer::updateField(const std::vector<std::vector<unsigned>> &gameBoard)
+{
+    std::function<unsigned (size_t, size_t)> getTileNumber =
+            [&gameBoard](size_t i, size_t j) { return gameBoard[i][j]; };
+    updateField(getTileNumber);
 }
 
 void FieldRenderer::updateTile(size_t i, size_t j, unsigned int value) {
@@ -50,13 +45,11 @@ void FieldRenderer::updateTile(size_t i, size_t j, unsigned int value) {
     }
 }
 
-void FieldRenderer::drawGrid()
+void FieldRenderer::drawGrid(size_t size)
 {
     clearTiles();
     tileBackgroundRects.clear();
     scene->clear();
-
-    size_t size = gameBoard->get_size();
 
     auto sceneRect = scene->sceneRect();
     double sceneWidth = sceneRect.width();
@@ -81,6 +74,21 @@ void FieldRenderer::drawGrid()
             scene->addItem(tileBackgroundRects[i][j]);
         }
     }
+}
+
+void FieldRenderer::updateField(const std::function<unsigned (size_t, size_t)> &getTileNumber)
+{
+    clearTiles();
+
+    size_t size = tileBackgroundRects.size();
+    for (size_t i = 0; i < size; i++) {
+        for (size_t j = 0; j < size; j++) {
+            unsigned value = getTileNumber(i, j);
+            updateTile(i, j, value);
+        }
+    }
+
+    scene->update();
 }
 
 void FieldRenderer::clearTiles()

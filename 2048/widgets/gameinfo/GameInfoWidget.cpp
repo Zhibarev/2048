@@ -1,6 +1,7 @@
 #include "GameInfoWidget.hh"
 #include "ui_GameInfoWidget.h"
 #include "GameEventsEmitter.hh"
+#include "model/Model.hh"
 
 GameInfoWidget::GameInfoWidget(QWidget *parent) :
     QWidget(parent),
@@ -8,7 +9,7 @@ GameInfoWidget::GameInfoWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(&GameEventsEmitter::instance(), SIGNAL(gameStarted()),
+    connect(&GameEventsEmitter::instance(), SIGNAL(gameStarted(Model)),
             ui->infoLabel, SLOT(clear()));
     connect(&GameEventsEmitter::instance(), SIGNAL(gameUnpaused()),
             ui->infoLabel, SLOT(clear()));
@@ -17,8 +18,8 @@ GameInfoWidget::GameInfoWidget(QWidget *parent) :
 
     connect(&GameEventsEmitter::instance(), SIGNAL(gamePaused()),
             this, SLOT(onGamePaused()));
-    connect(&GameEventsEmitter::instance(), SIGNAL(gameEnded(bool)),
-            this, SLOT(onGameEnded(bool)));
+    connect(&GameEventsEmitter::instance(), SIGNAL(gameEnded(Model)),
+            this, SLOT(onGameEnded(Model)));
 }
 
 GameInfoWidget::~GameInfoWidget()
@@ -31,9 +32,9 @@ void GameInfoWidget::onGamePaused()
     setInfoLabelText(PAUSE_MESSAGE);
 }
 
-void GameInfoWidget::onGameEnded(bool isWin)
+void GameInfoWidget::onGameEnded(const Model &model)
 {
-    if (isWin)
+    if (model.isWin())
         setInfoLabelText(WIN_MESSAGE);
     else
         setInfoLabelText(LOSE_MESSAGE);

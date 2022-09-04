@@ -1,5 +1,6 @@
 #include "TimeWidget.hh"
 #include "GameEventsEmitter.hh"
+#include "model/Model.hh"
 
 
 TimeWidget::TimeWidget(QWidget *parent)
@@ -7,7 +8,7 @@ TimeWidget::TimeWidget(QWidget *parent)
 {
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateTime()));
 
-    connect(&GameEventsEmitter::instance(), SIGNAL(gameStarted()),
+    connect(&GameEventsEmitter::instance(), SIGNAL(gameStarted(Model)),
             this, SLOT(onGameStarted()));
     connect(&GameEventsEmitter::instance(), SIGNAL(gameUnpaused()),
             this, SLOT(onGameUnpaused()));
@@ -15,7 +16,7 @@ TimeWidget::TimeWidget(QWidget *parent)
             this, SLOT(stopTimer()));
     connect(&GameEventsEmitter::instance(), SIGNAL(gameReseted()),
             this, SLOT(stopTimer()));
-    connect(&GameEventsEmitter::instance(), SIGNAL(gameEnded(bool)),
+    connect(&GameEventsEmitter::instance(), SIGNAL(gameEnded(Model)),
             this, SLOT(stopTimer()));
 }
 

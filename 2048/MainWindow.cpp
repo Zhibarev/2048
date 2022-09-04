@@ -13,8 +13,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    controller = std::make_unique<Controller>(ui->gameView);
-
     connectSignalsAndSlots();
 }
 
@@ -31,15 +29,13 @@ MainWindow::~MainWindow() {
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    controller->move(event);
+    controller.move(event);
 }
 
 void MainWindow::connectSignalsAndSlots()
 {
     connect(ui->gameStateWidget, SIGNAL(userTriedToStart()),
             this, SLOT(OnUserTriedToStart()));
-    connect(&GameEventsEmitter::instance(), SIGNAL(playerWon(uint)),
-            this, SLOT(onPlayerWon(uint)));
 
     connect(ui->actionEnglish, &QAction::triggered,
             [this]() { translator.loadTranslation(Language::ENGLISH); } );
@@ -52,23 +48,15 @@ void MainWindow::connectSignalsAndSlots()
 
 void MainWindow::OnUserTriedToStart()
 {
-    ui->statusbar->clearMessage();
+    statusBar()->clearMessage();
 
     try {
         auto settings = ui->settingsTab->getSettings();
-        playerName = settings->getName();
-        ui->gameView->startGame(settings);
-        emit GameEventsEmitter::instance().gameStarted();
+        controller.startGame(settings);
     }
     catch (const IncorrectSettingsException &exception) {
         statusBar()->showMessage(exception.what());
     }
-}
-
-void MainWindow::onPlayerWon(unsigned finalScore)
-{
-    ScoreInfo scoreInfo(playerName, finalScore);
-    ui->leaderboardTab->addScore(scoreInfo);
 }
 
 void MainWindow::showInstruction()

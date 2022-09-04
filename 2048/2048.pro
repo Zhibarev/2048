@@ -6,8 +6,14 @@ CONFIG += c++14
 
 
 SOURCES += \
+    Main.cpp \
+    MainWindow.cpp \
     Controller.cpp \
     GameEventsEmitter.cpp \
+    model/Model.cpp \
+    model/GameBoard.cpp \
+    model/NumberTile.cpp \
+    translator/Translator.cpp \
     widgets/gameinfo/GameInfoWidget.cpp \
     widgets/gameinfo/ScoreWidget.cpp \
     widgets/gameinfo/TimeWidget.cpp \
@@ -18,10 +24,6 @@ SOURCES += \
     widgets/leaderboard/Leaderboard.cpp \
     widgets/leaderboard/LeaderboardWidget.cpp \
     widgets/leaderboard/ScoreInfo.cpp \
-    Main.cpp \
-    MainWindow.cpp \
-    widgets/gameview/model/GameBoard.cpp \
-    widgets/gameview/model/NumberTile.cpp \
     widgets/gameview/provider/graphicaltileprovider/FigureTileProvider.cpp \
     widgets/gameview/provider/graphicaltileprovider/GraphicalTileProvider.cpp \
     widgets/gameview/provider/graphicaltileprovider/NumberTileProvider.cpp \
@@ -30,13 +32,18 @@ SOURCES += \
     widgets/settings/IncorrectSettingsException.cpp \
     widgets/settings/Settings.cpp \
     widgets/settings/SettingsWidget.cpp \
-    translator/Translator.cpp \
     widgets/gamestate/GameStateWidget.cpp
 
 HEADERS += \
     Controller.hh \
     GameEventsEmitter.hh \
+    MainWindow.hh \
+    model/GameBoard.hh \
+    model/NumberTile.hh \
+    model/Direction.hh \
+    model/Model.hh \
     translator/Language.hh \
+    translator/Translator.hh \
     widgets/gameinfo/GameInfoWidget.hh \
     widgets/gameinfo/ScoreWidget.hh \
     widgets/gameinfo/TimeWidget.hh \
@@ -47,9 +54,6 @@ HEADERS += \
     widgets/leaderboard/Leaderboard.hh \
     widgets/leaderboard/LeaderboardWidget.hh \
     widgets/leaderboard/ScoreInfo.hh \
-    MainWindow.hh \
-    widgets/gameview/model/GameBoard.hh \
-    widgets/gameview/model/NumberTile.hh \
     widgets/gameview/provider/graphicaltileprovider/FigureTileProvider.hh \
     widgets/gameview/provider/graphicalTileprovider/GraphicalTileProvider.hh \
     widgets/gameview/provider/graphicaltileprovider/NumberTileProvider.hh \
@@ -58,7 +62,6 @@ HEADERS += \
     widgets/settings/IncorrectSettingsException.hh \
     widgets/settings/Settings.hh \
     widgets/settings/SettingsWidget.hh \
-    translator/Translator.hh \
     widgets/gamestate/GameStateWidget.hh
 
 FORMS += \

@@ -1,10 +1,10 @@
 #ifndef SETTINGSWIDGET_H
 #define SETTINGSWIDGET_H
 
-#include "settings.hh"
-
 #include <QWidget>
 #include <memory>
+
+class Settings;
 
 namespace Ui {
 class SettingsWidget;

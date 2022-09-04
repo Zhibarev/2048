@@ -1,9 +1,10 @@
 #include "Controller.hh"
 #include "GameEventsEmitter.hh"
+#include "model/Direction.hh"
 
-Controller::Controller(GameView *gameView)
-      : gameView(gameView),
-        isRunning(false)
+Controller::Controller()
+    : isRunning(false),
+      isAnimationPlaying(false)
 {
     QObject::connect(&GameEventsEmitter::instance(), &GameEventsEmitter::gameStarted,
                      [this]() { isRunning = true; });
@@ -15,28 +16,41 @@ Controller::Controller(GameView *gameView)
                      [this]() { isRunning = false; });
     QObject::connect(&GameEventsEmitter::instance(), &GameEventsEmitter::gameEnded,
                      [this]() { isRunning = false; });
+
+    QObject::connect(&GameEventsEmitter::instance(), &GameEventsEmitter::viewAnimationStarted,
+                     [this]() { isAnimationPlaying = true; });
+    QObject::connect(&GameEventsEmitter::instance(), &GameEventsEmitter::viewAnimationEnded,
+                     [this]() { isAnimationPlaying = false; });
 }
 
-void Controller::move(QKeyEvent *event) const
+void Controller::startGame(const std::unique_ptr<Settings> &settings)
 {
-    if (isRunning) {
-        Coords direction;
+    model.startGame(settings);
+}
+
+void Controller::move(QKeyEvent *event)
+{
+    if (isRunning && !isAnimationPlaying) {
+        Direction direction;
         switch (event->key()) {
             case Qt::Key_A:
-                direction = LEFT;
+                direction = Direction::LEFT;
                 break;
             case Qt::Key_D:
-                direction = RIGHT;
+                direction = Direction::RIGHT;
                 break;
             case Qt::Key_W:
-                direction = UP;
+                direction = Direction::UP;
                 break;
             case Qt::Key_S:
-                direction = DOWN;
+                direction = Direction::DOWN;
                 break;
             default:
                 return;
         }
-        gameView->move(direction);
+
+        model.move(direction);
+        if (isRunning)
+            model.createNewValue();
     }
 }

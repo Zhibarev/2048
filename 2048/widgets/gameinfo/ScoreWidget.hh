@@ -3,6 +3,8 @@
 
 #include "namednumber/NamedNumberWidget.hh"
 
+class Model;
+
 
 class ScoreWidget : public NamedNumberWidget
 {
@@ -10,6 +12,9 @@ class ScoreWidget : public NamedNumberWidget
 
 public:
     explicit ScoreWidget(QWidget *parent = nullptr);
+
+private slots:
+    void onScoreChanged(const Model &model);
 };
 
 #endif // SCOREWIDGET_H

@@ -1,10 +1,6 @@
 #ifndef GAMEVIEW_H
 #define GAMEVIEW_H
 
-#include "model/GameBoard.hh"
-#include "FieldRenderer.hh"
-#include "widgets/settings/Settings.hh"
-
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QLabel>
@@ -12,6 +8,9 @@
 #include <QTimer>
 #include <QObject>
 #include <memory>
+#include <vector>
+#include "FieldRenderer.hh"
+#include "widgets/settings/Settings.hh"
 
 
 class GameView : public QGraphicsView
@@ -21,27 +20,22 @@ class GameView : public QGraphicsView
 public:
     explicit GameView(QWidget *parent = nullptr);
 
-    void startGame(const std::unique_ptr<Settings> &settings);
-
-    void move(Coords direction);
-
 private:
     const unsigned APPEARANCE_DELAY = 200;
     QTimer appearanceDelayTimer;
 
-    std::shared_ptr<GameBoard> gameBoard;
+    bool isGraphicsModeActive = false;
 
     std::unique_ptr<FieldRenderer> fieldRenderer;
 
-    bool isStarted = false;
-
-    unsigned goal = 0;
-
-
-    void blockTile(Coords coords);
+    std::vector<std::vector<unsigned>> gameBoard;
 
 private slots:
-    void createNewTwo();
+    void createNewValue();
+
+    void onGameStarted(const Model &model);
+    void onModelMoved(const Model& model);
+    void onModelCreatedNewValue(const Model &model);
 };
 
 #endif // GAMEVIEW_H

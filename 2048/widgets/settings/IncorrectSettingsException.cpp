@@ -1,4 +1,5 @@
 #include "IncorrectSettingsException.hh"
+#include <QString>
 
 IncorrectSettingsException::IncorrectSettingsException(const QString &message)
     : std::runtime_error(message.toStdString())
